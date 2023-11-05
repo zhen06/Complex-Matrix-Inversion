@@ -1,0 +1,25 @@
+function [A,A_inv] = gen_matpair(n,cond_num)
+    S = randi([1,cond_num - 1],[n-2,1]);
+    S = [S;cond_num;1];
+    S = sym(S);
+    T = randi([1,cond_num - 1],[n-2,1]);
+    T = [T;cond_num;1];
+    T = sym(T);
+    U = S.^2 + T.^2;
+    S_2 = S./U;
+    T_2 = T./U;
+    S = diag(S);
+    T = diag(T);
+    S_2 = diag(S_2);
+    T_2 = diag(T_2);
+    H = sym(hadamard(n));
+    H = H/sqrt(n);
+    A_r = H*S*H';
+    A_c = H*T*H';
+    A = (A_r + 1j*A_c)/100;
+    B_r = H*S_2*H';
+    B_c = H*T_2*H';
+    A_inv = (B_r - 1j*B_c)*100;
+    A = double(A);
+    A_inv = double(A_inv);
+end
